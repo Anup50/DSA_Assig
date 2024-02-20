@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
+import java.util.LinkedList;
+import java.util.Queue;
 public class UserGraph {
     private Set<Edge> edges; // Set of edges representing connections between users
     private Map<String, Set<String>> followersMap; // Map to store followers for each user
@@ -32,45 +33,40 @@ public class UserGraph {
         // Update the 'following' set for the follower
         followersMap.computeIfAbsent(follower, k -> new HashSet<>()).add(followee);
     }
-
-    // Get recommendations for a given user including indirect connections
 public Set<String> getRecommend(String username) {
     Set<String> recommendations = new HashSet<>();
+    Set<String> visitedUsers = new HashSet<>(); // Track visited users
 
-    // Get direct followers of the given user
-    Set<String> directFollowers = followersMap.getOrDefault(username, new HashSet<>());
+    // Initialize queue with user's followers
+    Queue<String> unvisitedUsers = new LinkedList<>(followersMap.getOrDefault(username, new HashSet<>()));
 
-    // Add users followed by the direct followers of the given user
-    for (String directFollower : directFollowers) {
-        Set<String> followersOfFollower = followersMap.getOrDefault(directFollower, new HashSet<>());
-        recommendations.addAll(followersOfFollower);
-    }
+    while (!unvisitedUsers.isEmpty()) {
+        String currentUser = unvisitedUsers.poll();
 
-    // Add indirect followers of the given user
-    for (String directFollower : directFollowers) {
-        Set<String> indirectFollowers = new HashSet<>();
-
-        // Get the followers of the direct followers (indirect connections)
-        for (Map.Entry<String, Set<String>> entry : followersMap.entrySet()) {
-            String follower = entry.getKey();
-            Set<String> followers = entry.getValue();
-            if (!directFollowers.contains(follower) && !follower.equals(username) && followers.contains(directFollower)) {
-                indirectFollowers.add(follower);
-            }
+        // Skip if already explored or the given user
+        if (visitedUsers.contains(currentUser) || currentUser.equals(username)) {
+            continue;
         }
 
-        // Add indirect followers to recommendations
-        recommendations.addAll(indirectFollowers);
-    }
+        visitedUsers.add(currentUser);
 
-    // Remove the given user and its direct followers from recommendations
-    recommendations.remove(username);
-    recommendations.removeAll(directFollowers);
+        // Check if already followed directly before adding to recommendations
+        if (!followersMap.getOrDefault(username, new HashSet<>()).contains(currentUser)) {
+            recommendations.add(currentUser);
+        }
+
+        // Iterate through followers and add to queue if not explored
+        Set<String> followers = followersMap.getOrDefault(currentUser, new HashSet<>());
+        unvisitedUsers.addAll(followers);
+    }
 
     return recommendations;
 }
 
 
+private void exploreConnections(Set<String> currentUsers, Set<String> recommendations, Map<String, Set<String>> followersMap, String username) {
+    
+}
 
     public void loadDataFromDatabase(Connection connection) {
         if (connection == null) {
@@ -160,7 +156,7 @@ public Set<String> getRecommend(String username) {
         DbConnection.closeConnection(conn);
 
         // Test recommendations for a user
-        String username = "ayam";
+        String username = "anup";
         Set<String> recommendations = ug.getRecommend(username);
         System.out.println("Recommendations for " + username + ": " + recommendations);
     }
