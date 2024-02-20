@@ -25,4 +25,10 @@ public class One_B {
         // This will be the total time required to build all the engines.
         return engineQueue.poll();
     }
+    public static void main(String[] args) {
+        One_B soln = new One_B(); // Create an instance of the One_B class
+        int[] blocks = {3,4,5,2};
+        int splitTime = 2;
+        System.out.println(soln.minBuildTime(blocks, splitTime));
+    }
 }

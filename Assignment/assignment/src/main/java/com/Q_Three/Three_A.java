@@ -41,4 +41,19 @@ public class Three_A {
             return sortedScores.get(size / 2);
         }
     }
+    public static void main(String[] args) {
+        // Create an instance of Three_A
+        Three_A scores = new Three_A();
+
+        // Add some scores to the list
+        scores.addScore(85.5);
+        scores.addScore(90.0);
+        scores.addScore(75.2);
+        scores.addScore(92.3);
+        scores.addScore(82.6);
+
+        // Calculate and print the median score
+        double median = scores.getMedianScore();
+        System.out.println("Median Score: " + median);
+    }
 }

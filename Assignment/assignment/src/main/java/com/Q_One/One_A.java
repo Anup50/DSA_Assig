@@ -49,4 +49,13 @@ public class One_A {
         // Return the minimum cost
         return minCost;
     }
+    public static void main(String[] args) {
+        int[][] costs2 = {
+            {1, 3, 2},
+            {4, 6, 8},
+            {3, 1, 5}
+    };
+    System.out.println(minCost(costs2));
+
+    }
 }

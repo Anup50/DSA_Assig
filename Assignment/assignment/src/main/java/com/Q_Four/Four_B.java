@@ -73,5 +73,29 @@ public class Four_B {
             current = (reverse) ? current.left : current.right; // Move to the next node based on direction
         }
     }
+    public static void main(String[] args) {
+        // Create a sample binary search tree
+        //          4
+        //        /   \
+        //       2     5
+        //      / \     \
+        //     1   3     6
+        TreeNode root = new TreeNode(4);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(5);
+        root.left.left = new TreeNode(1);
+        root.left.right = new TreeNode(3);
+        root.right.right = new TreeNode(6);
+
+        
+        double target = 3.5;
+        int k = 3;
+
+        
+        List<Integer> closestValues = Four_B.closestKValues(root, target, k);
+
+       
+        System.out.println("Closest " + k + " values to " + target + ": " + closestValues);
+    }
 }
 
